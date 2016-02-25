@@ -32,6 +32,16 @@ for Zabbix Server. You may have already done this for other Zabbix plugins
 4. In Configuration -> Templates section of Zabbix, click `Import` and choose aerospike_templates.xml. 
 5. Add the newly imported `Template App Aerospike Service` to your Aerospike Hosts 
 
+### Namespace Checks
+
+The default template contains namespace checks for the namespace `test`. To change
+this to another namespace, go to Configuration -> Templates, and click on the Discovery section of
+Template App Aerospike Service. Click on Aerospike Test Namespace Metric, and change the key to
+
+    aerospike_discovery[-h,{HOST.IP},-n,YOUR_NAMESPACE]
+
+You may also want to rename this Discovery Rule.
+
 
 ### Aerospike Zabbix Plugin
 
@@ -56,6 +66,6 @@ To monitor all statistics in a namespace:
 To monitor a specific general statistic:
 `aerospike_discovery.py -h YOUR_ASD_HOST -s SERVICE_NAME`
 
-To monitor a specific statistic in a namepsace:
+To monitor a specific statistic in a namespace:
 `aerospike_discovery.py -h YOUR_ASD_HOST -s SERVICE_NAME -n YOUR_NAMESPACE`
 
