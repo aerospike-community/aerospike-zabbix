@@ -49,11 +49,11 @@ def usage():
     print "Usage:"
     print " -h host (default 127.0.0.1)"
     print " -p port (default 3000)"
-	print " -U user"
-	print " -P password"
-	print " -s \"statistic\" (Eg: \"free-pct-memory\")"
-	print " -n \"namespace\" (Eg: \"namespace/test\")"
-	print " -x \"xdr\" (Eg: \"datacenter1\")"
+    print " -U user"
+    print " -P password"
+    print " -s \"statistic\" (Eg: \"free-pct-memory\")"
+    print " -n \"namespace\" (Eg: \"namespace/test\")"
+    print " -x \"xdr\" (Eg: \"datacenter1\")"
     return
 ###
 
@@ -77,16 +77,16 @@ for o, a in opts:
         arg_stat = a
     if (o == "-n" or o == "--namespace"):
         arg_value = "namespace/" + a
-	if (o == "-x" or o == "--xdr"):
-		arg_value = "dc/" + a
-	if (o == "-U" or o == "--User"):
-		user = a
-	if (o == "-p" or o == "--Password"):
-		password = a
+    if (o == "-x" or o == "--xdr"):
+        arg_value = "dc/" + a
+    if (o == "-U" or o == "--User"):
+        user = a
+    if (o == "-p" or o == "--Password"):
+        password = a
 
 if user != None:
-	if password == None:
-		password = getpass.getpass("Enter Password:")
+    if password == None:
+        password = getpass.getpass("Enter Password:")
 
 
 #
