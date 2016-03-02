@@ -38,7 +38,7 @@ The default template contains namespace checks for the namespace `test`. To chan
 this to another namespace, go to Configuration -> Templates, and click on the Discovery section of
 Template App Aerospike Service. Click on Aerospike Test Namespace Metric, and change the key to
 
-    aerospike\_discovery[-h,{HOST.IP},-n,YOUR\_NAMESPACE]
+    aerospike_discovery[-h,{HOST.IP},-n,YOUR\_NAMESPACE]
 
 You may also want to rename this Discovery Rule.
 
@@ -46,7 +46,7 @@ You may also want to rename this Discovery Rule.
 
 XDR datacenter metrics are avaialble by changing the Template App key to:
 
-    aerospike\_discovery[-h,{HOST.IP},-x,YOUR_DATACENTER_NAME]
+    aerospike_discovery[-h,{HOST.IP},-x,YOUR_DATACENTER_NAME]
 
 The process is the same as namespace checks above.
 
