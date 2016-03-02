@@ -42,7 +42,8 @@ arg_host = "127.0.0.1"
 arg_port = 3000
 arg_value = "statistics"
 arg_stat = None
-
+user = None
+password = None
 
 ###
 def usage():
@@ -96,7 +97,11 @@ if user != None:
 config = {
         'hosts' : [ ( arg_host, arg_port ) ]
 }
-client = aerospike.client(config).connect([user,password])
+try:
+    client = aerospike.client(config).connect([user,password])
+except:
+    print("failed to connect to the cluster with", config['hosts'])
+    sys.exit(STATE_UNKNOWN)
 r = client.info_node(arg_value,(arg_host,arg_port))
 client.close()
 
