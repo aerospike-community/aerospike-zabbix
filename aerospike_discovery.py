@@ -3,14 +3,33 @@
 # A short utility program which pings a given host and requests the 'info' about
 # either all names or a certain name
 #
+
+# Copyright 2013-2016 Aerospike, Inc.
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http:#www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Description: Zabbix script for Aerospike
+
+__author__ = "Aerospike"
+__copyright__ = "Copyright 2016 Aerospike"
+__version__ = "1.1.0"
 
 import sys
 import types
 import getopt
 import re
 import aerospike
-#import pprint
+import getpass
 
 
 STATE_OK=0
@@ -30,15 +49,18 @@ def usage():
     print "Usage:"
     print " -h host (default 127.0.0.1)"
     print " -p port (default 3000)"
-    print " -s \"statistic\" (Eg: \"free-pct-memory\")"
-    print " -n \"namespace\" (Eg: \"namespace/test\")"
+	print " -U user"
+	print " -P password"
+	print " -s \"statistic\" (Eg: \"free-pct-memory\")"
+	print " -n \"namespace\" (Eg: \"namespace/test\")"
+	print " -x \"xdr\" (Eg: \"datacenter1\")"
     return
 ###
 
 ###
 ## Process passed in arguments
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "h:p:s:n::c:w:", ["host=","port=","statistics=","namespace"])
+    opts, args = getopt.getopt(sys.argv[1:], "h:p:s:n:x:U:P", ["host=","port=","statistics=","namespace=","xdr=","User=","Password="])
 
 ## If we don't get in options passed print usage.
 except getopt.GetoptError, err:
@@ -55,6 +77,17 @@ for o, a in opts:
         arg_stat = a
     if (o == "-n" or o == "--namespace"):
         arg_value = "namespace/" + a
+	if (o == "-x" or o == "--xdr"):
+		arg_value = "dc/" + a
+	if (o == "-U" or o == "--User"):
+		user = a
+	if (o == "-p" or o == "--Password"):
+		password = a
+
+if user != None:
+	if password == None:
+		password = getpass.getpass("Enter Password:")
+
 
 #
 # MAINLINE
@@ -63,7 +96,7 @@ for o, a in opts:
 config = {
         'hosts' : [ ( arg_host, arg_port ) ]
 }
-client = aerospike.client(config).connect()
+client = aerospike.client(config).connect([user,password])
 r = client.info_node(arg_value,(arg_host,arg_port))
 client.close()
 
