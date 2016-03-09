@@ -71,7 +71,7 @@
                     <type>10</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>aerospike_discovery[-h,{HOST.IP}]</key>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}]</key>
                     <delay>5</delay>
                     <status>0</status>
                     <allowed_hosts/>
@@ -147,7 +147,7 @@
                     <type>10</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>aerospike_discovery[-h,{HOST.IP},-n,test]</key>
+                    <key>aerospike_discovery.py[-h,{HOST.IP},-n,test]</key>
                     <delay>5</delay>
                     <status>0</status>
                     <allowed_hosts/>
