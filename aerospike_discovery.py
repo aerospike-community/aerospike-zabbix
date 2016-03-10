@@ -55,13 +55,14 @@ def usage():
     print " -s \"statistic\" (Eg: \"free-pct-memory\")"
     print " -n \"namespace\" (Eg: \"namespace/test\")"
     print " -x \"xdr\" (Eg: \"datacenter1\")"
+    print " -d \"dummy\""
     return
 ###
 
 ###
 ## Process passed in arguments
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "h:p:s:n:x:U:P", ["host=","port=","statistics=","namespace=","xdr=","User=","Password="])
+    opts, args = getopt.getopt(sys.argv[1:], "h:p:s:n:x:U:P:d", ["host=","port=","statistics=","namespace=","xdr=","User=","Password=","dummy="])
 
 ## If we don't get in options passed print usage.
 except getopt.GetoptError, err:

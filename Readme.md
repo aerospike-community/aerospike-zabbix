@@ -19,7 +19,6 @@ Features
 
 ### Known Issues
 
-- Alerting is not part of the template
 - Host based monitoring instead of cluster based monitoring
 - Not all non-numeric metrics have been converted to numeric
 
@@ -56,6 +55,19 @@ See *aerospike\_discovery.py*, this is the file that Zabbix will schedule to per
 queries against Aerospike. Other than copying it to the appropriate location,
 you are not required to interact with it.
 
+### Alert Triggers
+
+The main alert trigger is free memory/disk and if the namespace is in stop_writes. The free memory/disk 
+trigger is set as a template macro `{$ASD_FREE_PCT_LIMIT}`.
+
+To add more alerts via the LLD discovery mechanism, you will need to define a new Item prototype. This
+item protoytype will need to duplicate the existing discovery key, with the added exception of a unique 
+dummy variable. This is used since the same key cannot be used for multiple item prototype. You will also
+need to add a macro filter to this item prototype to filter down the results to your interested metrics.
+
+Next you will need to create a new trigger prototype using the item prototype that was just created.
+
+
 ###  Usage
 
     Usage:
@@ -66,6 +78,11 @@ you are not required to interact with it.
      -x xdr datacenter (Enterprise 3.7.4+)
      -s "statistic" (Eg: "free-pct-memory")
      -n "namespace" (Eg: "namespace/test")
+	 -d dummy
+
+The `dummy` variable is just there so Alert Triggers can be set in batches based on item prototypes. 
+However the item prototype needs to have unique keys (read: unique external script calls) so the
+dummy variable is there to satisfy this uniqueness.
 
 To monitor all general statistics:
 `aerospike_discovery.py -h YOUR_ASD_HOST`
