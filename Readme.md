@@ -41,14 +41,6 @@ Template App Aerospike Service. Click on Aerospike Test Namespace Metric, and ch
 
 You may also want to rename this Discovery Rule.
 
-### XDR Checks
-
-XDR datacenter metrics are avaialble by changing the Template App key to:
-
-    aerospike_discovery[-h,{HOST.IP},-x,YOUR_DATACENTER_NAME]
-
-The process is the same as namespace checks above.
-
 ### Aerospike Zabbix Plugin
 
 See *aerospike\_discovery.py*, this is the file that Zabbix will schedule to perform
@@ -75,7 +67,6 @@ Next you will need to create a new trigger prototype using the item prototype th
      -p port (default 3000)
      -U user (Enterprise only)
      -P password (Enterprise only)
-     -x xdr datacenter (Enterprise 3.7.4+)
      -s "statistic" (Eg: "free-pct-memory")
      -n "namespace" (Eg: "namespace/test")
 	 -d dummy
