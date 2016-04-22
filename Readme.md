@@ -7,7 +7,8 @@ The goal is to reduce the complexity to 3 simple steps.
 2. Import the configuration template into Zabbix.
 3. Add the new Aerospike Serivce Template to Aerospike Hosts in Zabbix.
 
-The project is not there yet, there are extra steps not yet automated.
+This project is currently in beta. Any suggestions or improvements are welcome through
+Git comments/issues and/or pull requests.
 
 Features
 ---
@@ -26,7 +27,8 @@ Features
 
 1. Enable [external scripts](https://www.zabbix.com/documentation/2.4/manual/config/items/itemtypes/external)
 for Zabbix Server. You may have already done this for other Zabbix plugins 
-2. Copy aerospike\_discovery.py to the extenal scripts directory. 
+2. Copy aerospike\_discovery.py to the extenal scripts directory and make it executable
+  * ie: chmod +x aerospike\_discovery.py
 3. Restart/Reload Zabbix 
 4. In Configuration -> Templates section of Zabbix, click `Import` and choose aerospike\_templates.xml. 
 5. Add the newly imported `Template App Aerospike Service` to your Aerospike Hosts 
@@ -35,15 +37,13 @@ for Zabbix Server. You may have already done this for other Zabbix plugins
 
 The default template contains namespace checks for the namespace `test`. To change
 this to another namespace, go to Configuration -> Templates, and click on the Discovery section of
-Template App Aerospike Service. Click on Aerospike Test Namespace Metric, and change the key to
+Template App Aerospike Service. Click on Aerospike Test Namespace Metric, and change `test` to the name of your namespace. For example, if your namespace was `fizzbuzz`:
 
-    aerospike_discovery[-h,{HOST.IP},-n,YOUR\_NAMESPACE]
-
-You may also want to rename this Discovery Rule.
+    aerospike_discovery[-h,{HOST.IP},-n,fizzbuzz]
 
 ### Aerospike Zabbix Plugin
 
-See *aerospike\_discovery.py*, this is the file that Zabbix will schedule to perform
+See *aerospike\_discovery.py*, this is the executable that Zabbix will schedule to perform
 queries against Aerospike. Other than copying it to the appropriate location,
 you are not required to interact with it.
 
@@ -59,6 +59,7 @@ need to add a macro filter to this item prototype to filter down the results to 
 
 Next you will need to create a new trigger prototype using the item prototype that was just created.
 
+You can still define individual alert triggers outside of the LLD mechanism.
 
 ###  Usage
 
@@ -69,7 +70,8 @@ Next you will need to create a new trigger prototype using the item prototype th
      -P password (Enterprise only)
      -s "statistic" (Eg: "free-pct-memory")
      -n "namespace" (Eg: "namespace/test")
-	 -d dummy
+     -x "xdr datacenter" (Enterprise 3.8+)
+     -d dummy
 
 The `dummy` variable is just there so Alert Triggers can be set in batches based on item prototypes. 
 However the item prototype needs to have unique keys (read: unique external script calls) so the
@@ -86,4 +88,7 @@ To monitor a specific general statistic:
 
 To monitor a specific statistic in a namespace:
 `aerospike_discovery.py -h YOUR_ASD_HOST -s SERVICE_NAME -n YOUR_NAMESPACE`
+
+To monitor all XDR statistics for a datacenter:
+`aerospike_discvoery.py -h YOUR_ASD_HOST -x DATACENTER`
 
