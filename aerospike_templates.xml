@@ -74,7 +74,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>aerospike_discovery.py[-h,{HOST.IP}, -d,1]</key>
-                    <delay>5</delay>
+                    <delay>60</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -115,7 +115,7 @@
                             <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>asfree_[{#METRICNAME}]</key>
-                            <delay>5</delay>
+                            <delay>60</delay>
                             <history>90</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -172,7 +172,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>aerospike_discovery.py[-h,{HOST.IP}]</key>
-                    <delay>5</delay>
+                    <delay>60</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -286,7 +286,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>aerospike_discovery.py[-h,{HOST.IP},-n,test]</key>
-                    <delay>5</delay>
+                    <delay>60</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -407,7 +407,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>aerospike_discovery.py[-h,{HOST.IP},-n,test,-d,1]</key>
-                    <delay>5</delay>
+                    <delay>60</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
