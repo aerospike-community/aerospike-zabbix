@@ -22,6 +22,11 @@ Features
 
 - Host based monitoring instead of cluster based monitoring
 - Not all non-numeric metrics have been converted to numeric
+- SELinux (CentOS) interferes with simple net checks built into Zabbix.
+  * Get around this by setting SELinux to disabled or permissive in `/etc/selinux.config`
+
+### Requirements
+1. Aerospike python client is required for the script to work. See [this page](http://www.aerospike.com/docs/client/python/install/)
 
 ### Getting Started
 
