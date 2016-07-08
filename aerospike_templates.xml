@@ -93,18 +93,7 @@
                     <publickey/>
                     <privatekey/>
                     <port/>
-                    <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions>
-                            <condition>
-                                <macro>{#METRICNAME}</macro>
-                                <value>free-pct</value>
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-                        </conditions>
-                    </filter>
+                    <filter>{#METRICNAME}:free-pct</filter>
                     <lifetime>30</lifetime>
                     <description/>
                     <item_prototypes>
@@ -191,11 +180,7 @@
                     <publickey/>
                     <privatekey/>
                     <port/>
-                    <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions/>
-                    </filter>
+                    <filter>:</filter>
                     <lifetime>0</lifetime>
                     <description/>
                     <item_prototypes>
@@ -305,18 +290,7 @@
                     <publickey/>
                     <privatekey/>
                     <port/>
-                    <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions>
-                            <condition>
-                                <macro>{#METRICNAME}</macro>
-                                <value/>
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-                        </conditions>
-                    </filter>
+					<filter>:</filter>
                     <lifetime>0</lifetime>
                     <description/>
                     <item_prototypes>
@@ -426,18 +400,7 @@
                     <publickey/>
                     <privatekey/>
                     <port/>
-                    <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions>
-                            <condition>
-                                <macro>{#METRICNAME}</macro>
-                                <value>stop-writes</value>
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-                        </conditions>
-                    </filter>
+                    <filter>{#METRICNAME}:stop-writes</filter>
                     <lifetime>30</lifetime>
                     <description/>
                     <item_prototypes>

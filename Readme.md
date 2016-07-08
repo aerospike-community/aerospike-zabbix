@@ -26,7 +26,14 @@ Features
   * Get around this by setting SELinux to disabled or permissive in `/etc/selinux.config`
 
 ### Requirements
-1. Aerospike python client is required for the script to work. See [this page](http://www.aerospike.com/docs/client/python/install/)
+1. Aerospike python client is required for the script to work. See [this page](http://www.aerospike.com/docs/client/python/install/) for more details
+
+>  pip install aerospike
+
+### Installing Zabbix
+
+Many popular distributions have Zabbix packages provided. You can follow along with their [official install documentation](https://www.zabbix.com/documentation/2.4/manual/installation/install_from_packages) or use a third party guide like the one [written by Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-zabbix-on-ubuntu-configure-it-to-monitor-multiple-vps-servers).
+
 
 ### Getting Started
 
