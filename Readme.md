@@ -3,7 +3,7 @@
 aerospike\_discovery.py simplifies Zabbix configurations for Aerospike clusters.
 The goal is to reduce the complexity to 3 simple steps.
 
-1. Drop aerospike\_discovery.py into the external scripts directory of Zabbix.
+1. Drop aerospike\_discovery.py and ssl\_context.py into the external scripts directory of Zabbix.
 2. Import the configuration template into Zabbix.
 3. Add the new Aerospike Serivce Template to Aerospike Hosts in Zabbix.
 
@@ -20,15 +20,15 @@ Features
 
 ### Known Issues
 
-- Host based monitoring instead of cluster based monitoring
 - Not all non-numeric metrics have been converted to numeric
 - SELinux (CentOS) interferes with simple net checks built into Zabbix.
   * Get around this by setting SELinux to disabled or permissive in `/etc/selinux.config`
 
 ### Requirements
-1. Aerospike python client is required for the script to work. See [this page](http://www.aerospike.com/docs/client/python/install/) for more details
 
->  pip install aerospike
+See requirements.txt
+
+> sudo pip install -r requirements.txt
 
 ### Installing Zabbix
 
@@ -74,17 +74,64 @@ Next you will need to create a new trigger prototype using the item prototype th
 You can still define individual alert triggers outside of the LLD mechanism.
 
 ###  Usage
+```bash
+usage: aerospike_discovery.py [-u] [-U USER] [-P [PASSWORD]] [-v]
+                              [-n NAMESPACE | -l LATENCY | -x DC] [-s STAT]
+                              [-p PORT] [-h HOST] [-d DUMMY] [--tls_enable]
+                              [--tls_encrypt_only] [--tls_keyfile TLS_KEYFILE]
+                              [--tls_certfile TLS_CERTFILE]
+                              [--tls_cafile TLS_CAFILE]
+                              [--tls_capath TLS_CAPATH]
+                              [--tls_protocols TLS_PROTOCOLS]
+                              [--tls_blacklist TLS_BLACKLIST]
+                              [--tls_ciphers TLS_CIPHERS] [--tls_crl]
+                              [--tls_crlall] [--tls_name TLS_NAME]
 
-    Usage:
-     -h host (default 127.0.0.1)
-     -p port (default 3000)
-     -U user (Enterprise only)
-     -P password (Enterprise only)
-     -s "statistic" (Eg: "free-pct-memory")
-     -n "namespace" (Eg: "namespace/test")
-     -x "xdr datacenter" (Enterprise 3.8+)
-     -d dummy
+optional arguments:
+  -u, --usage, --help   Show this help message and exit
+  -U USER, --user USER  user name
+  -P [PASSWORD], --password [PASSWORD]
+                        password
+  -v, --verbose         Enable verbose logging
+  -n NAMESPACE, --namespace NAMESPACE
+                        Namespace name. eg: bar
+  -l LATENCY, --latency LATENCY
+                        Options: see output of asinfo -v 'latency:hist' -l
+  -x DC, --xdr DC       Datacenter name. eg: myDC1
+  -s STAT, --stat STAT  Statistic name. eg: cluster_size
+  -p PORT, ---port PORT
+                        PORT for Aerospike server (default: 3000)
+  -h HOST, --host HOST  HOST for Aerospike server (default: 127.0.0.1)
+  -d DUMMY              Dummy variable for templating
+  --tls_enable          Enable TLS
+  --tls_encrypt_only    TLS Encrypt Only
+  --tls_keyfile TLS_KEYFILE
+                        The private keyfile for your client TLS Cert
+  --tls_certfile TLS_CERTFILE
+                        The client TLS cert
+  --tls_cafile TLS_CAFILE
+                        The CA for the server's certificate
+  --tls_capath TLS_CAPATH
+                        The path to a directory containing CA certs and/or
+                        CRLs
+  --tls_protocols TLS_PROTOCOLS
+                        The TLS protocol to use. Available choices: SSLv2,
+                        SSLv3, TLSv1, TLSv1.1, TLSv1.2, all. An optional + or
+                        - can be appended before the protocol to indicate
+                        specific inclusion or exclusion.
+  --tls_blacklist TLS_BLACKLIST
+                        Blacklist including serial number of certs to revoke
+  --tls_ciphers TLS_CIPHERS
+                        Ciphers to include. See https://www.openssl.org/docs/m
+                        an1.0.1/apps/ciphers.html for cipher list format
+  --tls_crl             Checks SSL/TLS certs against vendor's Certificate
+                        Revocation Lists for revoked certificates. CRLs are
+                        found in path specified by --tls_capath. Checks the
+                        leaf certificates only
+  --tls_crlall          Check on all entries within the CRL chain
+  --tls_name TLS_NAME   The expected name on the server side certificate
 
+```
 The `dummy` variable is just there so Alert Triggers can be set in batches based on item prototypes. 
 However the item prototype needs to have unique keys (read: unique external script calls) so the
 dummy variable is there to satisfy this uniqueness.
