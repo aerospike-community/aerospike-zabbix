@@ -79,7 +79,7 @@ You can still define individual alert triggers outside of the LLD mechanism.
 usage: aerospike_discovery.py [-u] [-U USER] [-P [PASSWORD]]
                               [--auth-mode AUTH_MODE] [-v]
                               [-n NAMESPACE | -l LATENCY | -x DC] [-s STAT]
-                              [-p PORT] [-h HOST] [-d DUMMY] [--tls-enable]
+                              [-p PORT] [-h HOST] [-d DUMMY]
                               [--timeout TIMEOUT] [--tls-enable]
                               [--tls-name TLS_NAME] [--tls-keyfile TLS_KEYFILE]
                               [--tls-keyfile-pw TLS_KEYFILE_PW]
