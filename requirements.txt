@@ -4,4 +4,4 @@ argparse
 #bcrypt
 
 # if using SSL/TLS
-#pyOpenSSL
+#pyOpenSSL==18.0.0
