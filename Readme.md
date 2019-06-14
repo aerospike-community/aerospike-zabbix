@@ -25,10 +25,12 @@ Features
   * Get around this by setting SELinux to disabled or permissive in `/etc/selinux.config`
 
 ### Requirements
+Additional python modules are required and installed using pip:
+```
+sudo pip install -r requirements.txt
+```
 
-See requirements.txt
-
-> sudo pip install -r requirements.txt
+See requirements.txt.
 
 ### Installing Zabbix
 
@@ -116,7 +118,7 @@ optional arguments:
   --tls-keyfile TLS_KEYFILE
                         The private keyfile for your client TLS Cert
   --tls-keyfile-pw TLS_KEYFILE_PW
-                        Password to load protected tls_keyfile
+                        Password to load protected --tls-keyfile
   --tls-certfile TLS_CERTFILE
                         The client TLS cert
   --tls-cafile TLS_CAFILE
@@ -125,8 +127,8 @@ optional arguments:
                         The path to a directory containing CA certs and/or
                         CRLs
   --tls-ciphers TLS_CIPHERS
-                        Ciphers to include. See https://www.openssl.org/docs/m
-                        an1.0.1/apps/ciphers.html for cipher list format
+                        Ciphers to include. See See https://www.openssl.org/docs/m
+                        an1.1.0/man1/ciphers.html for cipher list format
   --tls-protocols TLS_PROTOCOLS
                         The TLS protocol to use. Available choices: TLSv1,
                         TLSv1.1, TLSv1.2, all. An optional + or - can be
@@ -136,7 +138,7 @@ optional arguments:
                         Blacklist including serial number of certs to revoke
   --tls-crl-check       Checks SSL/TLS certs against vendor's Certificate
                         Revocation Lists for revoked certificates. CRLs are
-                        found in path specified by --tls_capath. Checks the
+                        found in path specified by --tls-capath. Checks the
                         leaf certificates only
   --tls-crl-check-all   Check on all entries within the CRL chain
 
@@ -145,18 +147,29 @@ The `dummy` variable is just there so Alert Triggers can be set in batches based
 However the item prototype needs to have unique keys (read: unique external script calls) so the
 dummy variable is there to satisfy this uniqueness.
 
+### Examples
 To monitor all general statistics:
-`aerospike_discovery.py -h YOUR_ASD_HOST`
+```
+aerospike_discovery.py -h YOUR_ASD_HOST
+```
 
 To monitor all statistics in a namespace:
-`aerospike_discovery.py -h YOUR_ASD_HOST -n YOUR_NAMESPACE`
+```
+aerospike_discovery.py -h YOUR_ASD_HOST -n YOUR_NAMESPACE
+```
 
 To monitor a specific general statistic:
-`aerospike_discovery.py -h YOUR_ASD_HOST -s SERVICE_NAME`
+```
+aerospike_discovery.py -h YOUR_ASD_HOST -s SERVICE_NAME
+```
 
 To monitor a specific statistic in a namespace:
-`aerospike_discovery.py -h YOUR_ASD_HOST -s SERVICE_NAME -n YOUR_NAMESPACE`
+```
+aerospike_discovery.py -h YOUR_ASD_HOST -s SERVICE_NAME -n YOUR_NAMESPACE
+```
 
 To monitor all XDR statistics for a datacenter:
-`aerospike_discvoery.py -h YOUR_ASD_HOST -x DATACENTER`
+```
+aerospike_discovery.py -h YOUR_ASD_HOST -x DATACENTER
+```
 
