@@ -34,12 +34,14 @@ See requirements.txt.
 
 ### Installing Zabbix
 
-Many popular distributions have Zabbix packages provided. You can follow along with their [official install documentation](https://www.zabbix.com/documentation/2.4/manual/installation/install_from_packages) or use a third party guide like the one [written by Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-zabbix-on-ubuntu-configure-it-to-monitor-multiple-vps-servers).
+Many popular distributions have Zabbix packages provided. You can follow along with their [official install documentation](https://www.zabbix.com/documentation/4.4/manual/installation/install_from_packages) or use a third party guide like the one [written by Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-zabbix-on-ubuntu-configure-it-to-monitor-multiple-vps-servers).
+
+Note: Zabbix 4.4 needed. Older versions may not be able to import aerospike template.
 
 
 ### Getting Started
 
-1. Enable [external scripts](https://www.zabbix.com/documentation/2.4/manual/config/items/itemtypes/external)
+1. Enable [external scripts](https://www.zabbix.com/documentation/4.4/manual/config/items/itemtypes/external)
 for Zabbix Server. You may have already done this for other Zabbix plugins 
 2. Copy aerospike\_discovery.py to the external scripts directory and make it executable
   * ie: chmod +x aerospike\_discovery.py

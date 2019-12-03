@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>2.0</version>
+    <version>4.4</version>
     <date>2016-03-10T00:33:09Z</date>
     <groups>
         <group>
@@ -25,119 +25,112 @@
             <items>
                 <item>
                     <name>Aerospike</name>
-                    <type>3</type>
+                    <type>SIMPLE</type>
                     <snmp_community/>
-                    <multiplier>0</multiplier>
                     <snmp_oid/>
                     <key>net.tcp.service[tcp,,3000]</key>
                     <delay>30</delay>
-                    <history>90</history>
-                    <trends>365</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <status>ENABLED</status>
+                    <value_type>UNSIGNED</value_type>
                     <allowed_hosts/>
                     <units/>
-                    <delta>0</delta>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                     <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <formula>1</formula>
-                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-                    <data_type>0</data_type>
-                    <authtype>0</authtype>
+                    <authtype>NONE</authtype>
                     <username/>
                     <password/>
                     <publickey/>
                     <privatekey/>
                     <port/>
                     <description/>
-                    <inventory_link>0</inventory_link>
                     <applications>
                         <application>
                             <name>Aerospike</name>
                         </application>
                     </applications>
-                    <valuemap/>
                     <logtimefmt/>
                 </item>
             </items>
             <discovery_rules>
                 <discovery_rule>
                     <name>Aerospike Free</name>
-                    <type>10</type>
+                    <type>EXTERNAL</type>
                     <snmp_community/>
                     <snmp_oid/>
                     <key>aerospike_discovery.py[-h,{HOST.IP}, -d,1]</key>
                     <delay>60</delay>
-                    <status>0</status>
+                    <status>ENABLED</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                     <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-                    <authtype>0</authtype>
+                    <authtype>NONE</authtype>
                     <username/>
                     <password/>
                     <publickey/>
                     <privatekey/>
-                    <port/>
-                    <filter>{#METRICNAME}:free-pct</filter>
-                    <lifetime>30</lifetime>
+					<port/>
+					<filter>
+						<conditions>
+							<condition>
+                                <macro>{#METRICNAME}</macro>
+                                <value>free-pct</value>
+                                <formulaid>A</formulaid>
+							</condition>
+						</conditions>
+					</filter>
+                    <lifetime>30d</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
                             <name>Aerospike Free</name>
-                            <type>15</type>
+                            <type>CALCULATED</type>
                             <snmp_community/>
-                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>asfree_[{#METRICNAME}]</key>
                             <delay>60</delay>
-                            <history>90</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
+                            <history>90d</history>
+                            <trends>365d</trends>
+                            <status>ENABLED</status>
+                            <value_type>UNSIGNED</value_type>
                             <allowed_hosts/>
                             <units/>
-                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                             <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
                             <params>{#METRICVALUE}</params>
                             <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
+                            <authtype>NONE</authtype>
                             <username/>
                             <password/>
                             <publickey/>
                             <privatekey/>
                             <port/>
                             <description/>
-                            <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
                                     <name>Aerospike</name>
                                 </application>
                             </applications>
-                            <valuemap/>
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
@@ -146,10 +139,8 @@
                             <expression>{Template App Aerospike Service:asfree_[{#METRICNAME}].last()}&lt;{$ASD_FREE_PCT_LIMIT}</expression>
                             <name>Aerospike Free Stats</name>
                             <url/>
-                            <status>0</status>
-                            <priority>0</priority>
+                            <status>ENABLED</status>
                             <description/>
-                            <type>0</type>
                         </trigger_prototype>
                     </trigger_prototypes>
                     <graph_prototypes/>
@@ -157,74 +148,65 @@
                 </discovery_rule>
                 <discovery_rule>
                     <name>Aerospike Stats</name>
-                    <type>10</type>
+                    <type>EXTERNAL</type>
                     <snmp_community/>
                     <snmp_oid/>
                     <key>aerospike_discovery.py[-h,{HOST.IP}]</key>
                     <delay>60</delay>
-                    <status>0</status>
+                    <status>ENABLED</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                     <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-                    <authtype>0</authtype>
+                    <authtype>NONE</authtype>
                     <username/>
                     <password/>
                     <publickey/>
                     <privatekey/>
-                    <port/>
-                    <filter>:</filter>
+					<port/>
                     <lifetime>0</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
                             <name>AEROSPIKE_STATS_{#METRICNAME}</name>
-                            <type>15</type>
+                            <type>CALCULATED</type>
                             <snmp_community/>
-                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>asinfo_stats[{#METRICNAME}]</key>
                             <delay>30</delay>
-                            <history>90</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
+                            <history>90d</history>
+                            <trends>365d</trends>
+                            <status>ENABLED</status>
+                            <value_type>UNSIGNED</value_type>
                             <allowed_hosts/>
                             <units/>
-                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                             <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
                             <params>{#METRICVALUE}</params>
                             <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
+                            <authtype>NONE</authtype>
                             <username/>
                             <password/>
                             <publickey/>
                             <privatekey/>
                             <port/>
                             <description/>
-                            <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
                                     <name>Aerospike</name>
                                 </application>
                             </applications>
-                            <valuemap/>
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
@@ -236,25 +218,17 @@
                             <height>200</height>
                             <yaxismin>0.0000</yaxismin>
                             <yaxismax>100.0000</yaxismax>
-                            <show_work_period>1</show_work_period>
-                            <show_triggers>1</show_triggers>
-                            <type>0</type>
-                            <show_legend>1</show_legend>
-                            <show_3d>0</show_3d>
                             <percent_left>0.0000</percent_left>
                             <percent_right>0.0000</percent_right>
-                            <ymin_type_1>1</ymin_type_1>
-                            <ymax_type_1>0</ymax_type_1>
+                            <ymin_type_1>FIXED</ymin_type_1>
+                            <ymax_type_1>CALCULATED</ymax_type_1>
                             <ymin_item_1>0</ymin_item_1>
                             <ymax_item_1>0</ymax_item_1>
                             <graph_items>
                                 <graph_item>
                                     <sortorder>0</sortorder>
-                                    <drawtype>0</drawtype>
                                     <color>00C800</color>
-                                    <yaxisside>0</yaxisside>
-                                    <calc_fnc>2</calc_fnc>
-                                    <type>0</type>
+                                    <type>SIMPLE</type>
                                     <item>
                                         <host>Template App Aerospike Service</host>
                                         <key>asinfo_stats[{#METRICNAME}]</key>
@@ -267,74 +241,65 @@
                 </discovery_rule>
                 <discovery_rule>
                     <name>Aerospike Test Namespace Metric</name>
-                    <type>10</type>
+                    <type>EXTERNAL</type>
                     <snmp_community/>
                     <snmp_oid/>
                     <key>aerospike_discovery.py[-h,{HOST.IP},-n,test]</key>
                     <delay>60</delay>
-                    <status>0</status>
+                    <status>ENABLED</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                     <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-                    <authtype>0</authtype>
+                    <authtype>NONE</authtype>
                     <username/>
                     <password/>
                     <publickey/>
                     <privatekey/>
                     <port/>
-					<filter>:</filter>
                     <lifetime>0</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
                             <name>ASINFO_NS_{#METRICNAME}</name>
-                            <type>15</type>
+                            <type>CALCULATED</type>
                             <snmp_community/>
-                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>namespace_test[{#METRICNAME}]</key>
                             <delay>60</delay>
-                            <history>90</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
+                            <history>90d</history>
+                            <trends>365d</trends>
+                            <status>ENABLED</status>
+                            <value_type>UNSIGNED</value_type>
                             <allowed_hosts/>
                             <units/>
-                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                             <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
                             <params>{#METRICVALUE}</params>
                             <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
+                            <authtype>NONE</authtype>
                             <username/>
                             <password/>
                             <publickey/>
                             <privatekey/>
                             <port/>
                             <description/>
-                            <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
                                     <name>Aerospike</name>
                                 </application>
                             </applications>
-                            <valuemap/>
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
@@ -346,25 +311,17 @@
                             <height>200</height>
                             <yaxismin>0.0000</yaxismin>
                             <yaxismax>100.0000</yaxismax>
-                            <show_work_period>1</show_work_period>
-                            <show_triggers>1</show_triggers>
-                            <type>0</type>
-                            <show_legend>1</show_legend>
-                            <show_3d>0</show_3d>
                             <percent_left>0.0000</percent_left>
                             <percent_right>0.0000</percent_right>
-                            <ymin_type_1>1</ymin_type_1>
-                            <ymax_type_1>0</ymax_type_1>
+                            <ymin_type_1>FIXED</ymin_type_1>
+                            <ymax_type_1>CALCULATED</ymax_type_1>
                             <ymin_item_1>0</ymin_item_1>
                             <ymax_item_1>0</ymax_item_1>
                             <graph_items>
                                 <graph_item>
                                     <sortorder>0</sortorder>
-                                    <drawtype>0</drawtype>
                                     <color>00C800</color>
-                                    <yaxisside>0</yaxisside>
-                                    <calc_fnc>2</calc_fnc>
-                                    <type>0</type>
+                                    <type>SIMPLE</type>
                                     <item>
                                         <host>Template App Aerospike Service</host>
                                         <key>namespace_test[{#METRICNAME}]</key>
@@ -377,74 +334,74 @@
                 </discovery_rule>
                 <discovery_rule>
                     <name>Aerospike Writes Stopped</name>
-                    <type>10</type>
+                    <type>EXTERNAL</type>
                     <snmp_community/>
                     <snmp_oid/>
                     <key>aerospike_discovery.py[-h,{HOST.IP},-n,test,-d,1]</key>
                     <delay>60</delay>
-                    <status>0</status>
+                    <status>ENABLED</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                     <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-                    <authtype>0</authtype>
+                    <authtype>NONE</authtype>
                     <username/>
                     <password/>
                     <publickey/>
                     <privatekey/>
-                    <port/>
-                    <filter>{#METRICNAME}:stop-writes</filter>
-                    <lifetime>30</lifetime>
+					<port/>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#METRICNAME}</macro>
+                                <value>stop-writes</value>
+                                <formulaid>B</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>                    
+                    <lifetime>30d</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
                             <name>Aerospike Stop Writes</name>
-                            <type>10</type>
+                            <type>EXTERNAL</type>
                             <snmp_community/>
-                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>as_stop_writes</key>
                             <delay>30</delay>
-                            <history>90</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
+                            <history>90d</history>
+                            <trends>365d</trends>
+                            <status>ENABLED</status>
+                            <value_type>UNSIGNED</value_type>
                             <allowed_hosts/>
                             <units/>
-                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
                             <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privprotocol>DES</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-                            <data_type>3</data_type>
-                            <authtype>0</authtype>
+                            <authtype>NONE</authtype>
                             <username/>
                             <password/>
                             <publickey/>
                             <privatekey/>
                             <port/>
                             <description/>
-                            <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
                                     <name>Aerospike</name>
                                 </application>
                             </applications>
-                            <valuemap/>
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
@@ -453,10 +410,8 @@
                             <expression>{Template App Aerospike Service:as_stop_writes.last()}=1</expression>
                             <name>Aerospike Writes Stopped</name>
                             <url/>
-                            <status>0</status>
-                            <priority>0</priority>
+                            <status>ENABLED</status>
                             <description/>
-                            <type>0</type>
                         </trigger_prototype>
                     </trigger_prototypes>
                     <graph_prototypes/>
@@ -478,10 +433,9 @@
             <expression>{Template App Aerospike Service:net.tcp.service[tcp,,3000].last(0)}=0</expression>
             <name>Aerospike service on {HOST.NAME}</name>
             <url/>
-            <status>0</status>
-            <priority>3</priority>
+            <status>ENABLED</status>
+            <priority>AVERAGE</priority>
             <description/>
-            <type>0</type>
             <dependencies/>
         </trigger>
     </triggers>
