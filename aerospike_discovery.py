@@ -160,7 +160,7 @@ class Client(object):
             except Exception as msg:
                 s.close()
                 s = None
-                print "Connect Error %s" % msg
+                print ("Connect Error %s" % msg)
                 continue
 
             break
@@ -477,7 +477,7 @@ try:
                    tls_crl_check=args.tls_crl_check, tls_crl_check_all=args.tls_crl_check_all,)
 except Exception as e:
     print("Failed to connect to the Aerospike cluster at %s:%s"%(args.host,args.port))
-    print e
+    print(e)
     sys.exit(STATE_UNKNOWN)
 
 if user:
@@ -488,32 +488,32 @@ if user:
             sys.exit(STATE_UNKNOWN)
     except Exception as e:
         print("Failed to authenticate connection to the Aerospike cluster at %s:%s"%(args.host,args.port))
-        print e
+        print(e)
         sys.exit(STATE_UNKNOWN)
 
 try:
     r = client.info(arg_value).strip()
 except Exception as e:
     print("Failed to execute asinfo command %s on the Aerospike cluster at %s:%s"%(arg_value, args.host, args.port))
-    print e
+    print(e)
     sys.exit(STATE_UNKNOWN)
 
 client.close()
 
 if r == None:
-    print "request to ",args.host,":",args.port," returned no data."
+    print("request to ",args.host,":",args.port," returned no data.")
     sys.exit(STATE_CRITICAL)
 
 if r == -1:
-    print "request to ",args.host,":",args.port," returned error."
+    print("request to ",args.host,":",args.port," returned error.")
     sys.exit(STATE_CRITICAL)
 
 if args.stat != None and args.stat not in r:
-    print "%s is not a known statistic." %args.stat
+    print("%s is not a known statistic." %args.stat)
     sys.exit(STATE_UNKNOWN)
 
-print "{"
-print "\t\"data\":["
+print("{")
+print("\t\"data\":[")
 first = True
 r = r.strip()
 for s in r.split(";"):
@@ -523,7 +523,7 @@ for s in r.split(";"):
         if args.stat != metricname:
             continue
     if not first:
-        print "\t,"
+        print("\t,")
     first = False
     if metricvalue == "true" or metricvalue == "on":
         metricvalue = "1"
@@ -531,11 +531,11 @@ for s in r.split(";"):
         metricvalue = "0"
     if metricname == "cluster_key":
         metricvalue = str(int(metricvalue,16)) # Convert HEX id to numerical
-    print "\t{"
-    print "\t\t\"{#METRICNAME}\":\""+metricname+"\","
-    print "\t\t\"{#METRICVALUE}\":\""+metricvalue+"\""
-    print "\t}"
+    print("\t{")
+    print("\t\t\"{#METRICNAME}\":\""+metricname+"\",")
+    print("\t\t\"{#METRICVALUE}\":\""+metricvalue+"\"")
+    print("\t}")
 
-print "\t]"
-print "}"
+print("\t]")
+print("}")
 sys.exit(STATE_OK)
