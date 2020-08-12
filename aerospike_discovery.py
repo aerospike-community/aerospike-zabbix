@@ -4,7 +4,7 @@
 # either all names or a certain name
 #
 
-# Copyright 2013-2019 Aerospike, Inc.
+# Copyright 2013-2020 Aerospike, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
 # Description: Zabbix script for Aerospike
 
 __author__ = "Aerospike"
-__copyright__ = "Copyright 2019 Aerospike"
-__version__ = "2.0.0"
+__copyright__ = "Copyright 2020 Aerospike"
+__version__ = "3.0.0"
 
 import sys
 import socket
@@ -42,7 +42,6 @@ STATE_DEPENDENT=4
 
 arg_host = "127.0.0.1"
 arg_port = 3000
-arg_value = "statistics"
 arg_stat = None
 user = None
 password = None
@@ -344,6 +343,62 @@ class Client(object):
         except Exception as ex:
             raise IOError("Error: %s" % str(ex))
 
+# =============================================================================
+#
+# Std. Out Stream
+#
+# -----------------------------------------------------------------------------
+
+class OutputStream():
+    def __init__(self):
+        self.list = ["{", "\t\"data\":["]
+        self.first = True
+
+    def add(self, metricname, metricvalue):
+        if not self.first:
+            self.list.append("\t,")
+        self.first = False
+
+        #
+        # Find  unit of measurement for the statstic
+        #
+        metricunits = ''
+        if "pct" in metricname:
+            metricunits = '%'
+        elif "bytes" in metricname:
+            metricunits = 'B'
+
+        # Convert non numeric values to numeric
+        if metricvalue == "true" or metricvalue == "on":
+            metricvalue = "1"
+        elif metricvalue == "false" or metricvalue == "off":
+            metricvalue = "0"
+
+        if metricname in {"cluster_key", "cluster_principal", "paxos_principal"}:
+            metricvalue = str(int(metricvalue,16)) # Convert HEX id to numerical
+        elif metricname == "dc_state":
+            if metricvalue == "CLUSTER_INACTIVE":
+                metricvalue = "0"
+            elif metricvalue == "CLUSTER_UP":
+                metricvalue = "1"
+            elif metricvalue == "CLUSTER_DOWN":
+                metricvalue = "2"
+            else:
+                # CLUSTER_WINDOW_SHIP
+                metricvalue = "3"
+                
+
+        self.list.append("\t{")
+        self.list.append("\t\t\"{#METRICNAME}\":\""+metricname+"\",")
+        self.list.append("\t\t\"{#METRICVALUE}\":\""+metricvalue+"\",")
+        self.list.append("\t\t\"{#METRICUNITS}\":\""+metricunits+"\"")
+        self.list.append("\t}")
+
+    def printStream(self):
+        self.list.append("\t]")
+        self.list.append("}")
+        print("\n".join(self.list))
+
 ###
 # Argument parsing
 ###
@@ -361,6 +416,9 @@ parser.add_argument("-P"
                     , nargs="?"
                     , const="prompt"
                     , help="password")
+parser.add_argument("--credentials-file"
+                    , dest="credentials"
+                    , help="Path to the credentials file. Use this in place of --user and --password.")
 parser.add_argument("--auth-mode"
                     , dest="auth_mode"
                     , default=str(AuthMode.INTERNAL)
@@ -378,11 +436,28 @@ group.add_argument("-n"
 group.add_argument("-l"
                     , "--latency"
                     , dest="latency"
+                    , action="store_const"
+                    , const = True
                     , help="Options: see output of asinfo -v 'latency:hist' -l")
 group.add_argument("-x"
                     , "--xdr"
                     , dest="dc"
                     , help="Datacenter name. eg: myDC1")
+group2 = parser.add_mutually_exclusive_group()
+group2.add_argument("-t"
+                    , "--set"
+                    , dest="set"
+                    , help="Set name. eg: testSet. Statistic for a particular set in a particular namespace.")
+group2.add_argument("-b"
+                    , "--bin"
+                    , dest="bin"
+                    , action="store_const"
+                    , const=True
+                    , help="Bin usage information for a particular namspace.")
+group2.add_argument("-i"
+                    , "--sindex"
+                    , dest="sindex"
+                    , help="Secondary Index name. eg: age. Statistic for a particular secondary index in a particular namespace.")
 parser.add_argument("-s"
                     , "--stat"
                     , dest="stat"
@@ -447,12 +522,9 @@ parser.add_argument("--tls-crl-check-all"
 
 args = parser.parse_args()
 
-if args.dc:
-  arg_value='dc/'+args.dc
-elif args.namespace:
-  arg_value='namespace/'+args.namespace
-elif args.latency:
-  arg_value='latency:hist='+args.latency
+notNone = any(arg is not None for arg in [args.set, args.bin, args.sindex])
+if notNone and args.namespace is None:
+    parser.error("--set, --bin, and --sindex require --namespace")
 
 user = None
 password = None
@@ -463,6 +535,13 @@ if args.user != None:
         args.password = getpass.getpass("Enter Password:")
     password = args.password
 
+if args.credentials:
+    try:
+        cred_file = open(args.credentials,'r')
+        user = cred_file.readline().strip()
+        password = cred_file.readline().strip()
+    except IOError:
+        print("Unable to read credentials file: %s"%args.credentials)
 
 #
 # MAINLINE
@@ -491,51 +570,144 @@ if user:
         print(e)
         sys.exit(STATE_UNKNOWN)
 
+asinfo_cmd = "statistics"
+
+# Find server version to find correct asinfo commands.
+req = 'build'
 try:
-    r = client.info(arg_value).strip()
+    version = client.info(req).split('.')
 except Exception as e:
-    print("Failed to execute asinfo command %s on the Aerospike cluster at %s:%s"%(arg_value, args.host, args.port))
+        print("Failed to execute asinfo command %s on the Aerospike cluster at %s:%s"%(req, args.host, args.port))
+        print(e)
+        sys.exit(STATE_UNKNOWN)
+
+if args.dc:
+        asinfo_cmd='dc/'+args.dc
+
+        # Version 5.0+ got removed dc/DC_NAME and added get-stats:context=xdr;dc=DC_NAME
+        if int(version[0]) >= 5:
+            asinfo_cmd='get-stats:context=xdr;dc='+args.dc
+
+# namespace must be checked after sets, bins, and sindex
+elif args.set:
+    asinfo_cmd='sets/'+args.namespace+'/'+args.set
+elif args.bin:
+    asinfo_cmd='bins/'+args.namespace
+elif args.sindex:
+    asinfo_cmd='sindex/'+args.namespace+'/'+args.sindex
+elif args.namespace:
+    asinfo_cmd='namespace/'+args.namespace
+elif args.latency:
+    asinfo_cmd='latency:'
+    if args.stat:
+        asinfo_cmd='latency:hist='+args.stat.rsplit('-',1)[0]
+
+try:
+    res = client.info(asinfo_cmd).strip()
+except Exception as e:
+    print("Failed to execute asinfo command %s on the Aerospike cluster at %s:%s"%(asinfo_cmd, args.host, args.port))
     print(e)
     sys.exit(STATE_UNKNOWN)
 
 client.close()
 
-if r == None:
+if res == None:
     print("request to ",args.host,":",args.port," returned no data.")
     sys.exit(STATE_CRITICAL)
 
-if r == -1:
+if res == -1:
     print("request to ",args.host,":",args.port," returned error.")
     sys.exit(STATE_CRITICAL)
 
-if args.stat != None and args.stat not in r:
-    print("%s is not a known statistic." %args.stat)
-    sys.exit(STATE_UNKNOWN)
+# Possible postfixes to latency metric requests.
+latency_metrics = ["tps", "1ms", "8ms", "64ms"]
 
-print("{")
-print("\t\"data\":[")
-first = True
-r = r.strip()
-for s in r.split(";"):
-    metricname=re.split('=|\t',s)[-2]
-    metricvalue=s.split("=")[-1]
-    if args.stat != None:
-        if args.stat != metricname:
+if args.stat != None:
+    stat = args.stat
+    metric = None
+    if args.latency:
+        # remove appended historgram value.
+        stat, metric = args.stat.rsplit('-', 1)
+    if stat not in res:
+        print("%s is not a known statistic." %args.stat)
+        sys.exit(STATE_UNKNOWN)
+    elif metric and metric not in latency_metrics:
+        print("%s is not a know latency histogram." % metric)
+        sys.exit(STATE_UNKNOWN)
+
+if res.endswith(";"):
+    res = res[:-1]
+res = res.strip()
+
+# Output stream collects output to send to stdout and looks up metrics
+stream = OutputStream()
+
+# first = True
+found = False
+if args.latency:
+    res = res.split(';')
+
+    # Single latency metric
+    if args.stat:
+        stat = args.stat.split('-')[-1]
+        if stat in latency_metrics:
+            # Remove duration data 
+            hist = res[1].split(',')[1:]
+            idx = latency_metrics.index(stat)
+            metricname = args.stat
+            metricvalue = hist[idx]
+            stream.add(metricname, metricvalue)
+
+    # All latency metrics
+    else:
+        table_data = res
+        while table_data != []:
+            labels = table_data.pop(0)
+            # keep popping if there's a line with error
+            if labels.startswith('error'):
+                continue
+
+            hist_name, labels = labels.split(':', 1)
+            data = table_data.pop(0).split(',')
+
+            # Get rid of duration data
+            data.pop(0)
+
+            # TPS column
+            metricname = "%s_tps" % (hist_name)
+            metricvalue = data.pop(0)
+            stream.add(metricname, metricvalue)
+
+            latency_idx = 0
+            while data:
+                metricname = "%s_pct_gt_%s" % (hist_name, latency_metrics[latency_idx])
+                metricvalue = data.pop(0)
+                stream.add(metricname, metricvalue)
+                latency_idx += 1
+
+else:
+    if args.set:
+        res = res.split(':')
+    elif args.bin:
+        res = res.split(',')
+    else:
+        res = res.split(';')
+    for s in res:
+        # bin/<namespace> returns bin names seperated by ',' at end
+        if "=" not in s:
             continue
-    if not first:
-        print("\t,")
-    first = False
-    if metricvalue == "true" or metricvalue == "on":
-        metricvalue = "1"
-    elif metricvalue == "false" or metricvalue == "off":
-        metricvalue = "0"
-    if metricname == "cluster_key":
-        metricvalue = str(int(metricvalue,16)) # Convert HEX id to numerical
-    print("\t{")
-    print("\t\t\"{#METRICNAME}\":\""+metricname+"\",")
-    print("\t\t\"{#METRICVALUE}\":\""+metricvalue+"\"")
-    print("\t}")
+        metricname = re.split('=|\t',s)[-2]
+        metricvalue = s.split("=")[-1]
 
-print("\t]")
-print("}")
+        # indicates we are looking for a single metric
+        if args.stat != None:
+            if args.stat != metricname:
+                continue
+            found = True
+
+        stream.add(metricname, metricvalue)
+        if found:
+            break
+
+stream.printStream()
 sys.exit(STATE_OK)
