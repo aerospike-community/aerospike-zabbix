@@ -399,9 +399,11 @@ class OutputStream():
         self.list.append("}")
         print("\n".join(self.list))
 
-###
-# Argument parsing
-###
+# =============================================================================
+#
+# Argument Parsing
+#
+# -----------------------------------------------------------------------------
 parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument('-u'
                     , '--usage'
@@ -543,9 +545,11 @@ if args.credentials:
     except IOError:
         print("Unable to read credentials file: %s"%args.credentials)
 
+# =============================================================================
 #
-# MAINLINE
+# Mainline
 #
+# -----------------------------------------------------------------------------
 
 try:
     client = Client(addr=args.host,port=args.port, timeout=args.timeout)
