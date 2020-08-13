@@ -365,17 +365,21 @@ class OutputStream():
         metricunits = ''
         if "pct" in metricname:
             metricunits = '%'
-        elif "bytes" in metricname:
-            metricunits = 'B'
+        # All Byte metrics have "bytes" in the name except the values in this set.
+        elif "bytes" in metricname or metricname in {"ibtr_memory_used", "nbtr_memory_used", "si_accounted_memory"}:
+            metricunits = 'Bytes'
 
         # Convert non numeric values to numeric
         if metricvalue == "true" or metricvalue == "on":
             metricvalue = "1"
+            metricunits = "Bool"
         elif metricvalue == "false" or metricvalue == "off":
             metricvalue = "0"
+            metricunits = "Bool"
 
         if metricname in {"cluster_key", "cluster_principal", "paxos_principal"}:
             metricvalue = str(int(metricvalue,16)) # Convert HEX id to numerical
+        # dc_state is a metric in pre 5.0 server
         elif metricname == "dc_state":
             if metricvalue == "CLUSTER_INACTIVE":
                 metricvalue = "0"
