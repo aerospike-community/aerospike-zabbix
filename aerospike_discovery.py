@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 # A short utility program which pings a given host and requests the 'info' about
 # either all names or a certain name
@@ -32,7 +32,6 @@ import struct
 import time
 import getpass
 from ctypes import create_string_buffer
-
 
 STATE_OK=0
 STATE_WARNING=1
@@ -252,10 +251,11 @@ class Client(object):
     def _send_request(self, request, info_msg_version=2, info_msg_type=1):
         if request:
             request += '\n'
-
+        # struct.pack() used bytes in python 3
+        request_bytes = bytes(request, 'utf-8')
         proto = (info_msg_version << 56) | (info_msg_type << 48) | (len(request)+1)
         fmt_str = "! Q %ds B" % len(request)
-        buf = struct.pack(fmt_str, proto, request, 10)
+        buf = struct.pack(fmt_str, proto, request_bytes, 10)
 
         self._send(buf)
 
@@ -286,7 +286,8 @@ class Client(object):
             q = struct.unpack_from('! Q', buf, 0)
             sz = q[0] & 0xFFFFFFFFFFFF
             if sz > 0:
-                return self._recv(sz)
+                response_bytes = self._recv(sz)
+                return response_bytes.decode('utf-8')
         except Exception as ex:
             raise IOError("Error: %s" % str(ex))
 
@@ -561,7 +562,7 @@ try:
                    tls_keyfile=args.tls_keyfile, tls_keyfile_pw=args.tls_keyfile_pw, tls_certfile=args.tls_certfile,
                    tls_cafile=args.tls_cafile, tls_capath=args.tls_capath, tls_ciphers=args.tls_ciphers,
                    tls_protocols=args.tls_protocols, tls_cert_blacklist=args.tls_cert_blacklist,
-                   tls_crl_check=args.tls_crl_check, tls_crl_check_all=args.tls_crl_check_all,)
+                   tls_crl_check=args.tls_crl_check, tls_crl_check_all=args.tls_crl_check_all)
 except Exception as e:
     print("Failed to connect to the Aerospike cluster at %s:%s"%(args.host,args.port))
     print(e)
