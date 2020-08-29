@@ -18,7 +18,8 @@ Features
   - `$ asinfo -v 'namespace/<NAMESPACE_NAME>' [-h host]`
   - `$ asinfo -v 'dc/<DC_NAME>' [-h host]` pre 5.0
   - `$ asinfo -v 'get-stats:context=xdr;dc=<DC_NAME>' [-h host]` 5.0+
-  - `$ asinfo -v 'latency:' [-h host]`
+  - `$ asinfo -v 'latency:' [-h host]` pre 5.0
+  - `$ asinfo -v 'latencies:' [-h host]` 5.1+
   - `$ asinfo -v 'sets/<NAMESPACE_NAME>/<SET_NAME>' [-h host]`
   - `$ asinfo -v 'sindex/<NAMESPACE_NAME>/<SINDEX_NAME>' [-h host]`
   - `$ asinfo -v 'bins/<NAMESPACE_NAME>' [-h host]`
@@ -194,7 +195,7 @@ aerospike_discovery.py -h YOUR_ASD_HOST -l
 
 To monitor a specific latency metric:
 ```
-aerospike_discovery.py -h YOUR_ASD_HOST -l -s YOUR_HISTOGRAM-[tps|1ms|2ms|4ms|8ms]
+aerospike_discovery.py -h YOUR_ASD_HOST -l -s YOUR_HISTOGRAM
 ```
   - For instance, to monitor latencies greater than 8ms for histogram {test}-write:
   ```
