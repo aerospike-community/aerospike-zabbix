@@ -535,7 +535,7 @@ if notNone and args.namespace is None:
 user = None
 password = None
 
-if args.user != None:
+if args.user is not None:
     user = args.user
     if args.password == "prompt":
         args.password = getpass.getpass("Enter Password:")
@@ -589,6 +589,10 @@ except Exception as e:
         print(e)
         sys.exit(STATE_UNKNOWN)
 
+use_latencies_cmd = True if int(version[0]) >= 5 and int(version[1]) >= 1 else False
+latency_histogram = ''
+latency_time = ''
+
 if args.dc:
         asinfo_cmd='dc/'+args.dc
 
@@ -606,9 +610,14 @@ elif args.sindex:
 elif args.namespace:
     asinfo_cmd='namespace/'+args.namespace
 elif args.latency:
-    asinfo_cmd='latency:'
+    if use_latencies_cmd:
+        asinfo_cmd='latencies:'
+    else:
+        asinfo_cmd='latency:'
     if args.stat:
-        asinfo_cmd='latency:hist='+args.stat.rsplit('-',1)[0]
+        latency_histogram, latency_time = args.stat.rsplit('-', 1)
+        print(latency_histogram, latency_time)
+        asinfo_cmd+="hist="+latency_histogram
 
 try:
     res = client.info(asinfo_cmd).strip()
@@ -627,10 +636,14 @@ if res == -1:
     print("request to ",args.host,":",args.port," returned error.")
     sys.exit(STATE_CRITICAL)
 
-# Possible postfixes to latency metric requests.
-latency_metrics = ["tps", "1ms", "8ms", "64ms"]
+# Create lists of latency options
+latency_metrics = ["tps"] 
+if use_latencies_cmd:
+    latency_metrics.extend([str(2**i) + 'ms' for i in range(0, 17)])
+else: 
+    latency_metrics.extend(["1ms", "8ms", "64ms"])
 
-if args.stat != None:
+if args.stat is not None:
     stat = args.stat
     metric = None
     if args.latency:
@@ -639,8 +652,11 @@ if args.stat != None:
     if stat not in res:
         print("%s is not a known statistic." %args.stat)
         sys.exit(STATE_UNKNOWN)
-    elif metric and metric not in latency_metrics:
-        print("%s is not a know latency histogram." % metric)
+    elif metric and (metric not in latency_metrics):
+        if use_latencies_cmd:
+            print("%s is not a know latencies histogram." % metric)
+        else:
+            print("%s is not a know latency histogram." % metric)
         sys.exit(STATE_UNKNOWN)
 
 if res.endswith(";"):
@@ -651,48 +667,57 @@ res = res.strip()
 stream = OutputStream()
 
 # first = True
-found = False
+metric_found = False
 if args.latency:
     res = res.split(';')
-
-    # Single latency metric
-    if args.stat:
-        stat = args.stat.split('-')[-1]
-        if stat in latency_metrics:
-            # Remove duration data 
-            hist = res[1].split(',')[1:]
-            idx = latency_metrics.index(stat)
-            metricname = args.stat
-            metricvalue = hist[idx]
-            stream.add(metricname, metricvalue)
-
-    # All latency metrics
-    else:
-        table_data = res
-        while table_data != []:
-            labels = table_data.pop(0)
-            # keep popping if there's a line with error
-            if labels.startswith('error'):
+    metric_found = False
+    table_data = res
+    while table_data != []:
+        labels = table_data.pop(0)
+        # keep popping if there's a line with error
+        if labels.startswith('error'):
+            continue
+        hist_name, data = labels.split(':', 1)
+        # If looking for a single metric
+        if args.stat:
+            if hist_name == latency_histogram:
+                metric_found = True
+            else:
                 continue
-
-            hist_name, labels = labels.split(':', 1)
+        if use_latencies_cmd:
+            # Generate labels for latencies cmd
+            data = data.split(',')
+        else:
+            # following line has data with "latency:" cmd
             data = table_data.pop(0).split(',')
+        # Check to see if empty
+        if len(data) <= 1:
+            continue
+        labels = ['tps']
+        labels.extend(["pct_gt_" + ms for ms in latency_metrics[1:]])
 
-            # Get rid of duration data
-            data.pop(0)
-
-            # TPS column
-            metricname = "%s_tps" % (hist_name)
+        # Get rid of duration data (latency:) or units (latencies:)
+        data.pop(0)
+        latency_idx = 0
+        latency_found = False
+        while data:
+            label = labels.pop(0)
+            # If looking for a single metric
+            if args.stat:
+                if latency_time in label:
+                    latency_found = True
+                else:
+                    latency_idx += 1
+                    data.pop(0)
+                    continue
+            metricname = "%s_%s" % (hist_name, label)
             metricvalue = data.pop(0)
             stream.add(metricname, metricvalue)
-
-            latency_idx = 0
-            while data:
-                metricname = "%s_pct_gt_%s" % (hist_name, latency_metrics[latency_idx])
-                metricvalue = data.pop(0)
-                stream.add(metricname, metricvalue)
-                latency_idx += 1
-
+            latency_idx += 1
+            if latency_found:
+                break
+        if metric_found:
+            break
 else:
     if args.set:
         res = res.split(':')
@@ -708,13 +733,13 @@ else:
         metricvalue = s.split("=")[-1]
 
         # indicates we are looking for a single metric
-        if args.stat != None:
+        if args.stat is not None:
             if args.stat != metricname:
                 continue
-            found = True
+            metric_found = True
 
         stream.add(metricname, metricvalue)
-        if found:
+        if metric_found:
             break
 
 stream.printStream()
