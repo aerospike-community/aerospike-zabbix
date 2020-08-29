@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2020-08-12T20:46:53Z</date>
+    <date>2020-08-29T00:32:56Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -53,28 +53,6 @@
                             <name>Aerospike_bins_{#METRICNAME}</name>
                             <type>CALCULATED</type>
                             <key>aerospike_bins_[{#METRICNAME}]</key>
-                            <delay>60</delay>
-                            <value_type>FLOAT</value_type>
-                            <units>{#METRICUNITS}</units>
-                            <params>{#METRICVALUE}</params>
-                            <applications>
-                                <application>
-                                    <name>Aerospike</name>
-                                </application>
-                            </applications>
-                        </item_prototype>
-                    </item_prototypes>
-                </discovery_rule>
-                <discovery_rule>
-                    <name>Aerospike Latency {test}-write 8ms</name>
-                    <type>EXTERNAL</type>
-                    <key>aerospike_discovery.py[-h,{HOST.IP}, -l, -s, &quot;{test}-write-8ms&quot;]</key>
-                    <delay>60</delay>
-                    <item_prototypes>
-                        <item_prototype>
-                            <name>Aerospike_latency_test_write_8ms</name>
-                            <type>CALCULATED</type>
-                            <key>asinfo_latency_test_[{#METRICNAME}]</key>
                             <delay>60</delay>
                             <value_type>FLOAT</value_type>
                             <units>{#METRICUNITS}</units>
