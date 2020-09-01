@@ -594,30 +594,30 @@ latency_histogram = ''
 latency_time = ''
 
 if args.dc:
-        asinfo_cmd='dc/'+args.dc
+        asinfo_cmd = 'dc/' + args.dc
 
         # Version 5.0+ got removed dc/DC_NAME and added get-stats:context=xdr;dc=DC_NAME
         if int(version[0]) >= 5:
-            asinfo_cmd='get-stats:context=xdr;dc='+args.dc
+            asinfo_cmd = 'get-stats:context=xdr;dc=' + args.dc
 
 # namespace must be checked after sets, bins, and sindex
 elif args.set:
-    asinfo_cmd='sets/'+args.namespace+'/'+args.set
+    asinfo_cmd = 'sets/' + args.namespace + '/' + args.set
 elif args.bin:
-    asinfo_cmd='bins/'+args.namespace
+    asinfo_cmd = 'bins/' + args.namespace
 elif args.sindex:
-    asinfo_cmd='sindex/'+args.namespace+'/'+args.sindex
+    asinfo_cmd = 'sindex/' + args.namespace + '/' + args.sindex
 elif args.namespace:
-    asinfo_cmd='namespace/'+args.namespace
+    asinfo_cmd = 'namespace/' + args.namespace
 elif args.latency:
     if use_latencies_cmd:
-        asinfo_cmd='latencies:'
+        asinfo_cmd = 'latencies:'
     else:
-        asinfo_cmd='latency:'
+        asinfo_cmd = 'latency:'
     if args.stat:
         latency_histogram, latency_time = args.stat.rsplit('-', 1)
         print(latency_histogram, latency_time)
-        asinfo_cmd+="hist="+latency_histogram
+        asinfo_cmd += "hist=" + latency_histogram
 
 try:
     res = client.info(asinfo_cmd).strip()
