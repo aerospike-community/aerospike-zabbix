@@ -18,7 +18,7 @@ Features
   - `$ asinfo -v 'namespace/<NAMESPACE_NAME>' [-h host]`
   - `$ asinfo -v 'dc/<DC_NAME>' [-h host]` pre 5.0
   - `$ asinfo -v 'get-stats:context=xdr;dc=<DC_NAME>' [-h host]` 5.0+
-  - `$ asinfo -v 'latency:' [-h host]` pre 5.0
+  - `$ asinfo -v 'latency:' [-h host]` pre 5.1
   - `$ asinfo -v 'latencies:' [-h host]` 5.1+
   - `$ asinfo -v 'sets/<NAMESPACE_NAME>/<SET_NAME>' [-h host]`
   - `$ asinfo -v 'sindex/<NAMESPACE_NAME>/<SINDEX_NAME>' [-h host]`
@@ -80,7 +80,7 @@ you are not required to interact with it.
 
 The default template has 5 example triggers: free memory/disk, stop_writes, cluster_size, dc_state (pre 5.0)
 and latency_ms (5.0+). The free memory/disk trigger uses a template macro `{$ASD_FREE_PCT_LIMIT}` to determine 
-when the to trigger while the others use static values. Each trigger should be modified to fit your particular 
+when to trigger while the others use static values. Each trigger should be modified to fit your particular 
 aerospike configuration.
 
 To add more alerts via the LLD discovery mechanism, you will need to define a new Discovery Rule. This
