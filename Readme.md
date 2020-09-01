@@ -97,6 +97,7 @@ You can still define individual alert triggers outside of the LLD mechanism.
 
 ###  Usage
 ```bash
+./aerospike_discovery.py --help
 usage: aerospike_discovery.py [-u] [-U USER] [-P [PASSWORD]]
                               [--credentials-file CREDENTIALS]
                               [--auth-mode AUTH_MODE] [-v]
@@ -148,7 +149,7 @@ optional arguments:
   --tls-keyfile TLS_KEYFILE
                         The private keyfile for your client TLS Cert
   --tls-keyfile-pw TLS_KEYFILE_PW
-                        Password to load protected tls_keyfile
+                        Password to load protected tls-keyfile
   --tls-certfile TLS_CERTFILE
                         The client TLS cert
   --tls-cafile TLS_CAFILE
@@ -168,9 +169,10 @@ optional arguments:
                         Blacklist including serial number of certs to revoke
   --tls-crl-check       Checks SSL/TLS certs against vendor's Certificate
                         Revocation Lists for revoked certificates. CRLs are
-                        found in path specified by --tls_capath. Checks the
+                        found in path specified by --tls-capath. Checks the
                         leaf certificates only
   --tls-crl-check-all   Check on all entries within the CRL chain
+
 
 ```
 The `dummy` variable is just there so Alert Triggers can be set in batches based on item prototypes. 
