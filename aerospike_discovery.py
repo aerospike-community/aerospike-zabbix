@@ -589,7 +589,7 @@ except Exception as e:
         print(e)
         sys.exit(STATE_UNKNOWN)
 
-use_latencies_cmd = True if int(version[0]) >= 5 and int(version[1]) >= 1 else False
+use_latencies_cmd = int(version[0]) >= 5 and int(version[1]) >= 1
 latency_histogram = ''
 latency_time = ''
 
@@ -666,7 +666,6 @@ res = res.strip()
 # Output stream collects output to send to stdout and looks up metrics
 stream = OutputStream()
 
-# first = True
 metric_found = False
 if args.latency:
     res = res.split(';')
