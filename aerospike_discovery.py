@@ -589,7 +589,7 @@ except Exception as e:
         print(e)
         sys.exit(STATE_UNKNOWN)
 
-use_latencies_cmd = int(version[0]) >= 5 and int(version[1]) >= 1
+use_latencies_cmd = int(version[0]) > 5 or (int(version[0]) == 5 and int(version[1]) >= 1)
 latency_histogram = ''
 latency_time = ''
 
