@@ -666,6 +666,22 @@ res = res.strip()
 # Output stream collects output to send to stdout and looks up metrics
 stream = OutputStream()
 
+'''
+Note:  Responses are all single line.  Returns are added.
+
+latencies response example:
+"batch-index:;{test}-read:msec,10807.9,4.21,0.89,0.17,0.03,0.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00;
+{test}-write:msec,10872.4,4.98,1.06,0.18,0.04,0.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00;{test}-udf:;
+{test}-query:;{bar}-read:;{bar}-write:;{bar}-udf:;{bar}-query:"
+
+latency response example:
+"batch-index:;{test}-read:16:34:50-GMT,ops/sec,>1ms,>8ms,>64ms;16:35:00,0.0,0.00,0.00,0.00;
+{test}-write:16:34:50-GMT,ops/sec,>1ms,>8ms,>64ms;16:35:00,0.0,0.00,0.00,0.00;{test}-udf:;
+{test}-query:;{bar}-read:;{bar}-write:;{bar}-udf:;{bar}-query:"
+
+set response example, similar to namespace, bins, sindex:
+objects=100010:tombstones=0:memory_data_bytes=0:truncate_lut=0:stop-writes-count=0:disable-eviction=false;
+'''
 metric_found = False
 if args.latency:
     res = res.split(';')
