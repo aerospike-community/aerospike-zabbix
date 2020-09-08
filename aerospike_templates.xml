@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>4.4</version>
-    <date>2016-03-10T00:33:09Z</date>
+    <version>5.0</version>
+    <date>2020-08-29T00:32:56Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -11,7 +11,6 @@
         <template>
             <template>Template App Aerospike Service</template>
             <name>Template App Aerospike Service</name>
-            <description/>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -26,396 +25,440 @@
                 <item>
                     <name>Aerospike</name>
                     <type>SIMPLE</type>
-                    <snmp_community/>
-                    <snmp_oid/>
                     <key>net.tcp.service[tcp,,3000]</key>
                     <delay>30</delay>
-                    <history>90d</history>
-                    <trends>365d</trends>
-                    <status>ENABLED</status>
-                    <value_type>UNSIGNED</value_type>
-                    <allowed_hosts/>
-                    <units/>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>NONE</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <description/>
                     <applications>
                         <application>
                             <name>Aerospike</name>
                         </application>
                     </applications>
-                    <logtimefmt/>
+                    <triggers>
+                        <trigger>
+                            <expression>{last(0)}=0</expression>
+                            <name>Aerospike service on {HOST.NAME}</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
                 </item>
             </items>
             <discovery_rules>
                 <discovery_rule>
-                    <name>Aerospike Free</name>
+                    <name>Aerospike Bins</name>
                     <type>EXTERNAL</type>
-                    <snmp_community/>
-                    <snmp_oid/>
-                    <key>aerospike_discovery.py[-h,{HOST.IP}, -d,1]</key>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}, -b, -n, test]</key>
                     <delay>60</delay>
-                    <status>ENABLED</status>
-                    <allowed_hosts/>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>NONE</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-					<port/>
-					<filter>
-						<conditions>
-							<condition>
-                                <macro>{#METRICNAME}</macro>
-                                <value>free-pct</value>
-                                <formulaid>A</formulaid>
-							</condition>
-						</conditions>
-					</filter>
-                    <lifetime>30d</lifetime>
-                    <description/>
+                    <description>Get all metrics for bins in namespace &quot;test&quot;.</description>
                     <item_prototypes>
                         <item_prototype>
-                            <name>Aerospike Free</name>
+                            <name>Aerospike_bins_{#METRICNAME}</name>
                             <type>CALCULATED</type>
-                            <snmp_community/>
-                            <snmp_oid/>
-                            <key>asfree_[{#METRICNAME}]</key>
+                            <key>aerospike_bins_[{#METRICNAME}]</key>
                             <delay>60</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
-                            <status>ENABLED</status>
-                            <value_type>UNSIGNED</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
                             <params>{#METRICVALUE}</params>
-                            <ipmi_sensor/>
-                            <authtype>NONE</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
                             <applications>
                                 <application>
                                     <name>Aerospike</name>
                                 </application>
                             </applications>
-                            <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
-                    <trigger_prototypes>
-                        <trigger_prototype>
-                            <expression>{Template App Aerospike Service:asfree_[{#METRICNAME}].last()}&lt;{$ASD_FREE_PCT_LIMIT}</expression>
-                            <name>Aerospike Free Stats</name>
-                            <url/>
-                            <status>ENABLED</status>
-                            <description/>
-                        </trigger_prototype>
-                    </trigger_prototypes>
-                    <graph_prototypes/>
-                    <host_prototypes/>
                 </discovery_rule>
                 <discovery_rule>
-                    <name>Aerospike Stats</name>
+                    <name>Aerospike Latency</name>
                     <type>EXTERNAL</type>
-                    <snmp_community/>
-                    <snmp_oid/>
-                    <key>aerospike_discovery.py[-h,{HOST.IP}]</key>
-                    <delay>60</delay>
-                    <status>ENABLED</status>
-                    <allowed_hosts/>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>NONE</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-					<port/>
-                    <lifetime>0</lifetime>
-                    <description/>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}, -l]</key>
+                    <delay>10</delay>
                     <item_prototypes>
                         <item_prototype>
-                            <name>AEROSPIKE_STATS_{#METRICNAME}</name>
+                            <name>Aerospike_Latency_{#METRICNAME}</name>
                             <type>CALCULATED</type>
-                            <snmp_community/>
-                            <snmp_oid/>
-                            <key>asinfo_stats[{#METRICNAME}]</key>
-                            <delay>30</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
-                            <status>ENABLED</status>
-                            <value_type>UNSIGNED</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
+                            <key>asinfo_latency_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
                             <params>{#METRICVALUE}</params>
-                            <ipmi_sensor/>
-                            <authtype>NONE</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
                             <applications>
                                 <application>
                                     <name>Aerospike</name>
                                 </application>
                             </applications>
-                            <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
-                    <trigger_prototypes/>
                     <graph_prototypes>
                         <graph_prototype>
-                            <name>AS_GRAPH_{#METRICNAME}</name>
-                            <width>900</width>
-                            <height>200</height>
-                            <yaxismin>0.0000</yaxismin>
-                            <yaxismax>100.0000</yaxismax>
-                            <percent_left>0.0000</percent_left>
-                            <percent_right>0.0000</percent_right>
+                            <name>AS LATENCY GRAPH {#METRICNAME}</name>
                             <ymin_type_1>FIXED</ymin_type_1>
-                            <ymax_type_1>CALCULATED</ymax_type_1>
-                            <ymin_item_1>0</ymin_item_1>
-                            <ymax_item_1>0</ymax_item_1>
                             <graph_items>
                                 <graph_item>
-                                    <sortorder>0</sortorder>
                                     <color>00C800</color>
-                                    <type>SIMPLE</type>
                                     <item>
                                         <host>Template App Aerospike Service</host>
-                                        <key>asinfo_stats[{#METRICNAME}]</key>
+                                        <key>asinfo_latency_[{#METRICNAME}]</key>
                                     </item>
                                 </graph_item>
                             </graph_items>
                         </graph_prototype>
                     </graph_prototypes>
-                    <host_prototypes/>
                 </discovery_rule>
                 <discovery_rule>
-                    <name>Aerospike Test Namespace Metric</name>
+                    <name>Aerospike Namespace Free</name>
                     <type>EXTERNAL</type>
-                    <snmp_community/>
-                    <snmp_oid/>
-                    <key>aerospike_discovery.py[-h,{HOST.IP},-n,test]</key>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}, -n, test, -d,1]</key>
                     <delay>60</delay>
-                    <status>ENABLED</status>
-                    <allowed_hosts/>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>NONE</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <lifetime>0</lifetime>
-                    <description/>
-                    <item_prototypes>
-                        <item_prototype>
-                            <name>ASINFO_NS_{#METRICNAME}</name>
-                            <type>CALCULATED</type>
-                            <snmp_community/>
-                            <snmp_oid/>
-                            <key>namespace_test[{#METRICNAME}]</key>
-                            <delay>60</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
-                            <status>ENABLED</status>
-                            <value_type>UNSIGNED</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <params>{#METRICVALUE}</params>
-                            <ipmi_sensor/>
-                            <authtype>NONE</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <applications>
-                                <application>
-                                    <name>Aerospike</name>
-                                </application>
-                            </applications>
-                            <logtimefmt/>
-                        </item_prototype>
-                    </item_prototypes>
-                    <trigger_prototypes/>
-                    <graph_prototypes>
-                        <graph_prototype>
-                            <name>AS NS Test GRAPH {#METRICNAME}</name>
-                            <width>900</width>
-                            <height>200</height>
-                            <yaxismin>0.0000</yaxismin>
-                            <yaxismax>100.0000</yaxismax>
-                            <percent_left>0.0000</percent_left>
-                            <percent_right>0.0000</percent_right>
-                            <ymin_type_1>FIXED</ymin_type_1>
-                            <ymax_type_1>CALCULATED</ymax_type_1>
-                            <ymin_item_1>0</ymin_item_1>
-                            <ymax_item_1>0</ymax_item_1>
-                            <graph_items>
-                                <graph_item>
-                                    <sortorder>0</sortorder>
-                                    <color>00C800</color>
-                                    <type>SIMPLE</type>
-                                    <item>
-                                        <host>Template App Aerospike Service</host>
-                                        <key>namespace_test[{#METRICNAME}]</key>
-                                    </item>
-                                </graph_item>
-                            </graph_items>
-                        </graph_prototype>
-                    </graph_prototypes>
-                    <host_prototypes/>
-                </discovery_rule>
-                <discovery_rule>
-                    <name>Aerospike Writes Stopped</name>
-                    <type>EXTERNAL</type>
-                    <snmp_community/>
-                    <snmp_oid/>
-                    <key>aerospike_discovery.py[-h,{HOST.IP},-n,test,-d,1]</key>
-                    <delay>60</delay>
-                    <status>ENABLED</status>
-                    <allowed_hosts/>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>NONE</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-					<port/>
                     <filter>
                         <conditions>
                             <condition>
                                 <macro>{#METRICNAME}</macro>
-                                <value>stop-writes</value>
-                                <formulaid>B</formulaid>
+                                <value>free_pct</value>
+                                <formulaid>A</formulaid>
                             </condition>
                         </conditions>
-                    </filter>                    
-                    <lifetime>30d</lifetime>
-                    <description/>
+                    </filter>
                     <item_prototypes>
                         <item_prototype>
-                            <name>Aerospike Stop Writes</name>
-                            <type>EXTERNAL</type>
-                            <snmp_community/>
-                            <snmp_oid/>
-                            <key>as_stop_writes</key>
-                            <delay>30</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
-                            <status>ENABLED</status>
-                            <value_type>UNSIGNED</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>NOAUTHNOPRIV</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>MD5</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>DES</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <authtype>NONE</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
+                            <name>Aerospike_namespace_free_pct_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>asinfo_namespace_free_pct_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
                             <applications>
                                 <application>
                                     <name>Aerospike</name>
                                 </application>
                             </applications>
-                            <logtimefmt/>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}&lt;{$ASD_FREE_PCT_LIMIT}</expression>
+                                    <name>Aerospike Free Stats</name>
+                                </trigger_prototype>
+                            </trigger_prototypes>
                         </item_prototype>
                     </item_prototypes>
-                    <trigger_prototypes>
-                        <trigger_prototype>
-                            <expression>{Template App Aerospike Service:as_stop_writes.last()}=1</expression>
-                            <name>Aerospike Writes Stopped</name>
-                            <url/>
-                            <status>ENABLED</status>
-                            <description/>
-                        </trigger_prototype>
-                    </trigger_prototypes>
-                    <graph_prototypes/>
-                    <host_prototypes/>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike Namespace Stop Writes</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h,{HOST.IP},-n,test,-d,1]</key>
+                    <delay>60</delay>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#METRICNAME}</macro>
+                                <value>stop_writes</value>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_Stop_Writes_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>asinfo_namespace_test_stop_writes_[{#METRICNAME}]</key>
+                            <delay>30</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Aerospike Writes Stopped to Namespace Test</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike SIndex</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h, {HOST.IP}, -n, test, -i, testsindex]</key>
+                    <delay>60</delay>
+                    <description>All metrics for the secondary index &quot;testsindex&quot; in the namespace &quot;test&quot; using asinfo -v &quot;sindex/test/testsindex&quot;.</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_testsindex_sindex_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>aerospike_testsindex_sindex_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike Set Tombstones</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}, -n, test, -t, testset, -d, 1]</key>
+                    <delay>60</delay>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#METRICNAME}</macro>
+                                <value>tombstones</value>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_set_tombstones</name>
+                            <type>CALCULATED</type>
+                            <key>asinfo_set_tombstones_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike Set</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h, {HOST.IP}, -n, test, -t, testset]</key>
+                    <delay>60</delay>
+                    <description>Get all metrics for set &quot;testset&quot; in namespace &quot;test&quot; using asinfo -v &quot;sets/test/testset&quot;.</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_testset_set_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>aerospike_testset_set_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike Namespace</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h,{HOST.IP},-n,test]</key>
+                    <delay>60</delay>
+                    <lifetime>0</lifetime>
+                    <description>Get all metrics for namespace test using asinfo -v &quot;namespace/test&quot;</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_Namespace_Test_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>asinfo_namespace_test_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>AS NS Test GRAPH {#METRICNAME}</name>
+                            <ymin_type_1>FIXED</ymin_type_1>
+                            <graph_items>
+                                <graph_item>
+                                    <color>00C800</color>
+                                    <item>
+                                        <host>Template App Aerospike Service</host>
+                                        <key>asinfo_namespace_test_[{#METRICNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike Stats Cluster Size</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}, -s, &quot;cluster_size&quot;]</key>
+                    <delay>60</delay>
+                    <description>Get the general statistic &quot;Cluster Size&quot;</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_stats_cluster_size</name>
+                            <type>CALCULATED</type>
+                            <key>Aerospike_stats_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Aerospike Cluster Size = 1</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike XDR Latency ms 5.0+</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}, -x, DC1, -d, 1, -d 1]</key>
+                    <delay>60</delay>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#METRICNAME}</macro>
+                                <value>latency_ms</value>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_xdr_latency_ms_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>aerospike_xdr_latency_ms_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last(#3)}=100</expression>
+                                    <name>Aerospike XDR Latency High</name>
+                                    <priority>AVERAGE</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike XDR DC State pre 5.0</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}, -x, DC1, -d, 1]</key>
+                    <delay>60</delay>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#METRICNAME}</macro>
+                                <value>dc_state</value>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_xdr_dc_state_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>aerospike_xdr_dc_state_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=2</expression>
+                                    <name>Aerospike XDR Cluster Down</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike XDR</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}, -x, DC1]</key>
+                    <delay>60</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_xdr_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>aerospike_xdr_[{#METRICNAME}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Aerospike Stats</name>
+                    <type>EXTERNAL</type>
+                    <key>aerospike_discovery.py[-h,{HOST.IP}]</key>
+                    <delay>60</delay>
+                    <lifetime>0</lifetime>
+                    <description>Get all metrics returned by asinfo -v &quot;statistics&quot;</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Aerospike_Stats_{#METRICNAME}</name>
+                            <type>CALCULATED</type>
+                            <key>asinfo_stats_[{#METRICNAME}]</key>
+                            <delay>30</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>{#METRICUNITS}</units>
+                            <params>{#METRICVALUE}</params>
+                            <applications>
+                                <application>
+                                    <name>Aerospike</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>AS_GRAPH_{#METRICNAME}</name>
+                            <ymin_type_1>FIXED</ymin_type_1>
+                            <graph_items>
+                                <graph_item>
+                                    <color>00C800</color>
+                                    <item>
+                                        <host>Template App Aerospike Service</host>
+                                        <key>asinfo_stats_[{#METRICNAME}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
                 </discovery_rule>
             </discovery_rules>
             <macros>
@@ -424,19 +467,6 @@
                     <value>20</value>
                 </macro>
             </macros>
-            <templates/>
-            <screens/>
         </template>
     </templates>
-    <triggers>
-        <trigger>
-            <expression>{Template App Aerospike Service:net.tcp.service[tcp,,3000].last(0)}=0</expression>
-            <name>Aerospike service on {HOST.NAME}</name>
-            <url/>
-            <status>ENABLED</status>
-            <priority>AVERAGE</priority>
-            <description/>
-            <dependencies/>
-        </trigger>
-    </triggers>
 </zabbix_export>
