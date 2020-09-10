@@ -1,17 +1,21 @@
 # Introduction
 
-aerospike\_discovery.py simplifies Zabbix configurations for Aerospike clusters.
+`aerospike_discovery.py` simplifies [Zabbix](https://www.zabbix.com/) monitoring of Aerospike clusters.
 The goal is to reduce the complexity to 3 simple steps.
 
-1. Drop aerospike\_discovery.py and ssl directory into the external scripts directory of Zabbix.
+1. Drop `aerospike_discovery.py` and ssl directory into the external scripts directory of Zabbix.
 2. Import the configuration template into Zabbix.
 3. Add the new Aerospike Serivce Template to Aerospike Hosts in Zabbix.
 
-Any suggestions or improvements are welcome through
-Git comments/issues and/or pull requests.
+The Zabbix plug-in is compatible with Aerospike database 4.x and Aerospike database 5, last tested with database server versions 4.9.9 and 5.1.0.
 
-Features
----
+## Community Development
+
+This repository has been turned over to the community. If you wish to contribute code, go ahead and clone this repo, modify the code, and create a pull request.
+
+Active contributors can then ask to become maintainers for the repo. The wiki can similarly be modified by any code contributor who has been granted pull permissions.
+
+### Features
 
 - Can monitor any metric returned by
   - `$ asinfo -v 'statistics' [-h <HOST>]`
