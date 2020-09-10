@@ -1,13 +1,12 @@
 # Introduction
 
 `aerospike_discovery.py` simplifies [Zabbix](https://www.zabbix.com/) monitoring of Aerospike clusters.
-The goal is to reduce the complexity to 3 simple steps.
-
-1. Drop `aerospike_discovery.py` and ssl directory into the external scripts directory of Zabbix.
-2. Import the configuration template into Zabbix.
-3. Add the new Aerospike Serivce Template to Aerospike Hosts in Zabbix.
+The goal is to reduce the complexity to 3 simple steps.`
 
 The Zabbix plug-in is compatible with Aerospike database 4.x and Aerospike database 5, last tested with database server versions 4.9.9 and 5.1.0.
+
+## Aerospike Monitoring Stack
+For monitoring and alerting you should consider using the Prometheus and Grafana based [Aerospike Monitoring Stack](https://github.com/aerospike/aerospike-monitoring). This is the monitoring solution being developed by Aerospike.
 
 ## Community Development
 
