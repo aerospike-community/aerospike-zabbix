@@ -1,7 +1,6 @@
 # Introduction
 
 `aerospike_discovery.py` simplifies [Zabbix](https://www.zabbix.com/) monitoring of Aerospike clusters.
-The goal is to reduce the complexity to 3 simple steps.`
 
 The Zabbix plug-in is compatible with Aerospike database 4.x and Aerospike database 5, last tested with database server versions 4.9.9 and 5.1.0.
 
